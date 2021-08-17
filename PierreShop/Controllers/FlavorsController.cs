@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
@@ -34,21 +33,21 @@ namespace PierreShop.Controllers
 
     public ActionResult Create()
     {
-      ViewBag.TaskId = new SelectList(_db.Tasks, "TaskId", "Name");
+      ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Name");
       return View();
     }
 
     [HttpPost]
-    public async Task<ActionResult> Create(Flavor flavor, int TaskId)
+    public async Task<ActionResult> Create(Flavor flavor, int TreatId)
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync(userId);
       flavor.User = currentUser;
       _db.Flavors.Add(flavor);
       _db.SaveChanges();
-      if (TaskId != 0)
+      if (TreatId != 0)
       {
-          _db.TaskFlavor.Add(new TaskFlavor() { TaskId = TaskId, FlavorId = flavor.FlavorId });
+          _db.TreatFlavor.Add(new TreatFlavor() { TreatId = TreatId, FlavorId = flavor.FlavorId });
       }
       _db.SaveChanges();
       return RedirectToAction("Index");
@@ -58,7 +57,7 @@ namespace PierreShop.Controllers
     {
       var thisFlavor = _db.Flavors
           .Include(flavor => flavor.JoinEntities)
-          .ThenInclude(join => join.Task)
+          .ThenInclude(join => join.Treat)
           .FirstOrDefault(flavor => flavor.FlavorId == id);
       return View(thisFlavor);
     }
@@ -66,35 +65,35 @@ namespace PierreShop.Controllers
     public ActionResult Edit(int id)
     {
       var thisFlavor = _db.Flavors.FirstOrDefault(flavor => flavor.FlavorId == id);
-      ViewBag.TaskId = new SelectList(_db.Tasks, "TaskId", "Name");
+      ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Name");
       return View(thisFlavor);
     }
 
     [HttpPost]
-    public ActionResult Edit(Flavor flavor, int TaskId)
+    public ActionResult Edit(Flavor flavor, int TreatId)
     {
-      if (TaskId != 0)
+      if (TreatId != 0)
       {
-        _db.TaskFlavor.Add(new TaskFlavor() { TaskId = TaskId, FlavorId = flavor.FlavorId });
+        _db.TreatFlavor.Add(new TreatFlavor() { TreatId = TreatId, FlavorId = flavor.FlavorId });
       }
       _db.Entry(flavor).State = EntityState.Modified;
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
 
-    public ActionResult AddTask(int id)
+    public ActionResult AddTreat(int id)
     {
       var thisFlavor = _db.Flavors.FirstOrDefault(flavor => flavor.FlavorId == id);
-      ViewBag.TaskId = new SelectList(_db.Tasks, "TaskId", "Name");
+      ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Name");
       return View(thisFlavor);
     }
 
     [HttpPost]
-    public ActionResult AddTask(Flavor flavor, int TaskId)
+    public ActionResult AddTreat(Flavor flavor, int TreatId)
     {
-      if (TaskId != 0)
+      if (TreatId != 0)
       {
-      _db.TaskFlavor.Add(new TaskFlavor() { TaskId = TaskId, FlavorId = flavor.FlavorId });
+      _db.TreatFlavor.Add(new TreatFlavor() { TreatId = TreatId, FlavorId = flavor.FlavorId });
       }
       _db.SaveChanges();
       return RedirectToAction("Index");
@@ -116,10 +115,10 @@ namespace PierreShop.Controllers
     }
 
     [HttpPost]
-    public ActionResult DeleteTask(int joinId)
+    public ActionResult DeleteTreat(int joinId)
     {
-      var joinEntry = _db.TaskFlavor.FirstOrDefault(entry => entry.TaskFlavorId == joinId);
-      _db.TaskFlavor.Remove(joinEntry);
+      var joinEntry = _db.TreatFlavor.FirstOrDefault(entry => entry.TreatFlavorId == joinId);
+      _db.TreatFlavor.Remove(joinEntry);
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
