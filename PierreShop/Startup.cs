@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using FirstBank.Models;
+using PierreShop.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace PierreShop
@@ -26,11 +26,11 @@ namespace PierreShop
       services.AddMvc();
 
       services.AddEntityFrameworkMySql()
-        .AddDbContext<FirstBankContext>(options => options
+        .AddDbContext<PierreShopContext>(options => options
         .UseMySql(Configuration["ConnectionStrings:DefaultConnection"], ServerVersion.AutoDetect(Configuration["ConnectionStrings:DefaultConnection"])));
         
       services.AddIdentity<ApplicationUser, IdentityRole>()
-        .AddEntityFrameworkStores<FirstBankContext>()
+        .AddEntityFrameworkStores<PierreShopContext>()
         .AddDefaultTokenProviders();
 
       services.Configure<IdentityOptions>(options =>
