@@ -4,9 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using PierreShop.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace PierreShop.Controllers
 {
+
+  [Authorize]
   public class TreatsController : Controller
   {
     private readonly PierreShopContext _db;
